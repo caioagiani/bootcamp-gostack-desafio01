@@ -53,12 +53,14 @@ app.get('/projects', (req, res) => {
     res.json(projects);
 });
 
+/** Route list projects for id */
 app.delete('/projects/:id', checkList, changeLogs, (req, res) => {
     projects.splice(req.projectIndex, 1);
     
     return res.json(projects);
 });
 
+/** Route list add taskt to project id */
 app.post('/projects/:id/tasks', checkList, changeLogs, (req, res) => {
     const { titleTask } = req.body;
 
