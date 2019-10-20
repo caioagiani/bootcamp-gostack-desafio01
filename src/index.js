@@ -1,9 +1,9 @@
-const express = require("express");
+const express = require('express');
 
 const app = express();
 
-let projects = [];
-let request = 0;
+const projects = [];
+const request = 0;
 
 app.use(express.json());
 
@@ -11,64 +11,64 @@ app.use(express.json());
 
 /** Check projects exists */
 const checkList = (req, res, next) => {
-    const { id } = req.params;
-    const project = projects.find(p => p.id == id);
+  const { id } = req.params;
+  const project = projects.find((p) => p.id == id);
 
-    if (!project) return res.status(400).json({ error: 'Project does not exists' });
+  if (!project) return res.status(400).json({ error: 'Project does not exists' });
 
-    req.project = project;
+  req.project = project;
 
-    return next();
-}
+  return next();
+};
 
 /** Generate log  */
 const changeLogs = (req, res, next) => {
-    request++;
+  request++;
 
-    console.log(`${req.method} - ${req.url} :: Request Number: ${request}`);
+  console.log(`${req.method} - ${req.url} :: Request Number: ${request}`);
 
-    return next();
-}
+  return next();
+};
 
 /** Route edit id projects */
 app.put('/projects/:id', checkList, changeLogs, (req, res) => {
-    const { title } = req.body;
+  const { title } = req.body;
 
-    req.project.title = title;
+  req.project.title = title;
 
-    return res.json(req.project);
+  return res.json(req.project);
 });
 
 /** Route create projects */
 app.post('/projects', changeLogs, (req, res) => {
-    const { id, title } = req.body;
+  const { id, title } = req.body;
 
-    projects.push({ id: id, title: title, tasks: [] });
+  projects.push({ id, title, tasks: [] });
 
-    return res.json(projects);
+  return res.json(projects);
 });
 
 /** Route list projects */
 app.get('/projects', (req, res) => {
-    res.json(projects);
+  res.json(projects);
 });
 
 /** Route list projects for id */
 app.delete('/projects/:id', checkList, changeLogs, (req, res) => {
-    projects.splice(req.projectIndex, 1);
-    
-    return res.json(projects);
+  projects.splice(req.projectIndex, 1);
+
+  return res.json(projects);
 });
 
 /** Route list add taskt to project id */
 app.post('/projects/:id/tasks', checkList, changeLogs, (req, res) => {
-    const { titleTask } = req.body;
+  const { titleTask } = req.body;
 
-    req.project.tasks.push(titleTask);
+  req.project.tasks.push(titleTask);
 
-    return res.send(req.project);
+  return res.send(req.project);
 });
 
 app.listen(3333, () => {
-    console.log('Server started on port 3333');
-})
+  console.log('Server started on port 3333');
+});
