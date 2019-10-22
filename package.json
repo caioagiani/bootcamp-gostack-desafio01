@@ -1,7 +1,7 @@
 {
   "name": "01",
   "version": "1.0.0",
-  "description": "Desafio 1: Conceitos do NodeJS",
+  "description": "Desafio 1: Crude simples",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./src/index.js"

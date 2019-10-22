@@ -1,9 +1,9 @@
-const express = require('express');
+const express = require("express");
 
 const app = express();
 
 const projects = [];
-const request = 0;
+let request = 0;
 
 app.use(express.json());
 
@@ -12,9 +12,10 @@ app.use(express.json());
 /** Check projects exists */
 const checkList = (req, res, next) => {
   const { id } = req.params;
-  const project = projects.find((p) => p.id == id);
+  const project = projects.find(p => p.id == id);
 
-  if (!project) return res.status(400).json({ error: 'Project does not exists' });
+  if (!project)
+    return res.status(400).json({ error: "Project does not exists" });
 
   req.project = project;
 
@@ -25,13 +26,21 @@ const checkList = (req, res, next) => {
 const changeLogs = (req, res, next) => {
   request++;
 
-  console.log(`${req.method} - ${req.url} :: Request Number: ${request}`);
+  // console.time("Request");
+
+  console.log({
+    method: req.method,
+    url: req.url,
+    requestNumber: request
+  });
+
+  // console.timeEnd("Request");
 
   return next();
 };
 
 /** Route edit id projects */
-app.put('/projects/:id', checkList, changeLogs, (req, res) => {
+app.put("/projects/:id", checkList, changeLogs, (req, res) => {
   const { title } = req.body;
 
   req.project.title = title;
@@ -40,7 +49,7 @@ app.put('/projects/:id', checkList, changeLogs, (req, res) => {
 });
 
 /** Route create projects */
-app.post('/projects', changeLogs, (req, res) => {
+app.post("/projects", changeLogs, (req, res) => {
   const { id, title } = req.body;
 
   projects.push({ id, title, tasks: [] });
@@ -49,19 +58,19 @@ app.post('/projects', changeLogs, (req, res) => {
 });
 
 /** Route list projects */
-app.get('/projects', (req, res) => {
+app.get("/projects", (req, res) => {
   res.json(projects);
 });
 
 /** Route list projects for id */
-app.delete('/projects/:id', checkList, changeLogs, (req, res) => {
+app.delete("/projects/:id", checkList, changeLogs, (req, res) => {
   projects.splice(req.projectIndex, 1);
 
   return res.json(projects);
 });
 
 /** Route list add taskt to project id */
-app.post('/projects/:id/tasks', checkList, changeLogs, (req, res) => {
+app.post("/projects/:id/tasks", checkList, changeLogs, (req, res) => {
   const { titleTask } = req.body;
 
   req.project.tasks.push(titleTask);
@@ -70,5 +79,5 @@ app.post('/projects/:id/tasks', checkList, changeLogs, (req, res) => {
 });
 
 app.listen(3333, () => {
-  console.log('Server started on port 3333');
+  console.log("Server started on port 3333");
 });
