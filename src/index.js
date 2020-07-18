@@ -12,7 +12,7 @@ app.use(express.json());
 /** Check projects exists */
 const checkList = (req, res, next) => {
   const { id } = req.params;
-  const project = projects.find(p => p.id == id);
+  const project = projects.find((p) => p.id == id);
 
   if (!project)
     return res.status(400).json({ error: "Project does not exists" });
@@ -26,15 +26,15 @@ const checkList = (req, res, next) => {
 const changeLogs = (req, res, next) => {
   request++;
 
-  // console.time("Request");
+  console.time("Request");
 
   console.log({
     method: req.method,
     url: req.url,
-    requestNumber: request
+    requestNumber: request,
   });
 
-  // console.timeEnd("Request");
+  console.timeEnd("Request");
 
   return next();
 };
@@ -78,6 +78,4 @@ app.post("/projects/:id/tasks", checkList, changeLogs, (req, res) => {
   return res.send(req.project);
 });
 
-app.listen(3333, () => {
-  console.log("Server started on port 3333");
-});
+app.listen(3333, () => console.log("Server started on port 3333"));
